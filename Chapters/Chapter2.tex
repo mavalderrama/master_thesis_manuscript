@@ -1,0 +1,25 @@
+% Chapter 2
+
+\chapter{Definición del Problema} % Write in your own chapter title
+\label{Chapter2}
+\lhead{Capítulo 2. \emph{Definición del Problema}} % Write in your own chapter title to set the page header
+
+%tek el de abajo es el caso de estudio; no es el problema como tal...
+
+Dado el alto riesgo de inundación que presentan algunos de los ríos que surten de agua potable a las ciudades y poblaciones aledañas a su cuenca, existe la necesidad de monitorear y predecir su comportamiento en el tiempo a partir de la información meteorológica y del sensado de las variables físicas disponibles, con el fin de tomar acciones y alertar la población tempranamente.
+
+Dar solución a un problema como este desde un punto de vista de IoT implica analizar diferentes dimensiones, una de ellas es la capacidad de procesamiento y analítica que lleva tras de sí predecir y tomar decisiones. Por otro lado, tenemos los costos que implica desplegar una solución con la instrumentación y máquinas necesaria para procesar grandes bloques de información en la nube.
+
+\section{Procesamiento de la Información}
+
+Resolver el problema de la potencia de procesamiento desde un esquema de IoT ha traído consigo múltiples retos que no pueden ser resueltos por un esquema de operación basado en \textit{Cloud Computing}, es decir, que estos problemas son inevitables a menos que la aplicación sea insensible a ellos. Uno de los problemas más comunes es la latencia: enviar grandes cantidades de información a través de Internet usando un ancho de banda determinado puede retrasar el procesamiento hasta que toda la información esté disponible en el servidor de la nube; este problema se suma al tiempo que tarda en responder el servidor, imponiendo unas restricciones en el tiempo de respuesta mínimo que define la IEEE \citep{RTSSystems,FogBonomi}.
+
+%tek cuáles problemas son inevitables?
+
+\section{Costo del Procesamiento y Almacenamiento}
+
+El procesamiento centralizado ofrecido por los proveedores de computación en la nube es robusto en general, pero se ve limitado debido a los altos costos operativos para cierto tipo de  aplicaciones que no requieren mucha potencia de cálculo, despliegues de gran cantidad de servidores y altos niveles de tráfico de red hacia los servidores.
+
+Por otra parte, el almacenamiento en la nube también implica altos costos, originados tanto por la persistencia de los datos como por la cantidad de transacciones que se realizan al medio de almacenamiento \citep{AzurePrice,AWSPrice,GCPrice,UPrice}.
+
+Con todo esto, se hace necesario encontrar soluciones capaces de  analizar, transformar, tomar decisiones y enviar gran cantidad de información conservando el TDP (Thermal Design Power) característico de los procesadores orientados a IoT.

@@ -1,0 +1,26 @@
+% Chapter 5
+
+\chapter{Alcances} % Write in your own chapter title
+\label{Chapter5}
+\lhead{Capítulo 5. \emph{Alcances}} % Write in your own chapter title to set the page header
+
+\begin{enumerate}
+\item \textbf{Definir los requerimientos y los lineamientos requeridos por la plataforma}
+\begin{itemize}
+\item Definir las características de la plataforma según la tecnología de cómputo y fuentes de datos disponibles.
+\end{itemize}
+\item \textbf{Desarrollar un módulo de fusión de datos sintetizable en hardware, instrumentado y empaquetado como módulo IP}
+\begin{itemize}
+\item Desarrollo de una Red Neuronal Artificial en C++ que permita el procesamiento y fusión de los datos provenientes de múltiples sensores para luego ser sintetizado usando HLS con optimizaciones a nivel de hardware que permitan un alto nivel de concurrencia.
+\end{itemize}
+\item  \textbf{Integrar e implementar los módulos IP de fusión de datos como plataforma consciente del contexto usando reconfiguración parcial}
+\begin{itemize}
+\item Se espera desarrollar una plataforma que procese múltiples bloques de datos dependiendo del estado del sistema, cantidad de nodos sincronizados o frecuencia de muestreo requerida. Esto se deberá garantizar reconfigurando dinámicamente la FPGA con lo cual se añadirían más recursos de hardware al procesamiento de la información que llega al gateway.
+\item La cantidad de señales en paralelo que se puedan analizar dependerá del alcance número 1, los recursos de hardware (cantidad de bloques lógicos de la FPGA) con los que cuente la plataforma de desarrollo y el resultado final de las optmizaciones de hardware y síntesis.
+\end{itemize}
+\item  \textbf{Comparar el rendimiento de la plataforma desarrollada con una implementación diseñada completamente en software}
+\begin{itemize}
+\item Análisis de rendimiento de los módulos según el tiempo de procesamiento y los recursos de HW utilizados contra una implementación netamente SW.
+\end{itemize}
+
+\end{enumerate}

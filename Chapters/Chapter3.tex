@@ -1,0 +1,28 @@
+% Chapter 3
+
+\chapter{Objetivos} % Write in your own chapter title
+\label{Chapter3}
+\lhead{Capítulo 3. \emph{Objetivos}} % Write in your own chapter title to set the page header
+
+\section{Objetivo General}
+
+Proponer una plataforma de computación de borde para IoT que proporcione aceleración por hardware que, a través de la reconfiguración parcial, adicione funcionalidad de manera dinámica, con el objetivo de permitir que la plataforma se ajuste de acuerdo al contexto de ejecución.
+
+\section{Objetivos Específicos}
+\begin{itemize}
+\item Definir los requerimientos y los lineamientos requeridos por la plataforma.
+\item Desarrollar un módulo de fusión de datos sintetizable en hardware, instrumentado y empaquetado como módulo IP.
+\item Integrar e implementar los módulos IP de fusión de datos como plataforma consciente del contexto usando reconfiguración parcial.
+\item Comparar el rendimiento de la plataforma desarrollada con una implementación diseñada completamente en software.
+\end{itemize}
+
+\clearpage
+\section{Resultados Esperados}
+Se espera tener una plataforma mixta hardware-software que sea capaz de procesar datos provenientes de múltiples sensores de variables físicas relacionadas entre sí para combinarlos en un estimado que posteriormente será enviado a la nube para su procesamiento y análisis.
+
+Para efectos de desarrollo se dispondrá de una base de datos con la que la plataforma interactuará simulando la captura de datos a lo largo del tiempo.
+
+\begin{itemize}
+\item Los datos procesados contendrán información más rica y útil que la proporcionada por los valores individuales.
+\item El tiempo de procesamiento de los datos usando aceleración por HW deberá ser menor que su contraparte SW.
+\end{itemize}

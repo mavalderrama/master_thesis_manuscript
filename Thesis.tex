@@ -1,0 +1,184 @@
+%% ----------------------------------------------------------------
+%% Thesis.tex -- MAIN FILE (the one that you compile with LaTeX)
+%% ---------------------------------------------------------------- 
+
+% Set up the document
+\documentclass[11pt, openright]{Thesis}      % Use the "Thesis" style, based on the ECS Thesis style by Steve Gunn
+%\setpapersize{USletter}
+\graphicspath{{Figures/}}  % Location of the graphics files (set up for graphics to be in PDF format)
+% Include any extra LaTeX packages required
+\usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib" style for the references in the Bibliography
+\usepackage{verbatim}  % Needed for the "comment" environment to make LaTeX comments
+\usepackage{vector}  % Allows "\bvec{}" and "\buvec{}" for "blackboard" style bold vectors in maths
+\usepackage{color}
+\usepackage{multirow} 
+\usepackage{array}
+%\usepackage[spanish,onelanguage]{algorithm2e}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{pgfgantt}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{tocstyle}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows,fit}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue, 
+}
+ 
+\urlstyle{same}
+%% ----------------------------------------------------------------
+\begin{document}
+\frontmatter	  % Begin Roman style (i, ii, iii, iv...) page numbering
+
+% Set up the Title Page
+
+\title  {Computación de Borde con FPGA para IoT}
+\authors{\texorpdfstring
+            {\href{mailto:mavalderrama@javerianacali.edu.co}{Manuel A. Valderrama}}
+            {Manuel A. Valderrama}
+            }      
+\addresses  {\degreename\\\univname\\\deptname\\\groupname}  % Do not change this here, instead these must be set in the "Thesis.cls" file, please look through it instead
+\date       {\today}
+\subject    {}
+\keywords   {HLS, FPGA, Edge Computing, IoT}
+
+\maketitle 
+
+%% ----------------------------------------------------------------
+
+% \pagestyle{empty}  % No headers or footers for the following pages
+
+% % The Abstract Page
+% \abstract{
+% \addtocontents{toc}{\vspace{1em}}  % Add a gap in the Contents, for aesthetics
+
+% ASD
+% }
+
+% \clearpage  % Abstract ended, start a new page
+
+%% ----------------------------------------------------------------
+
+\pagestyle{fancy}  %The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+\usetocstyle[tocgraduated]{allwithdot}
+
+%% ----------------------------------------------------------------
+\tableofcontents  % Write out the Table of Contents
+
+%% ----------------------------------------------------------------
+\listoffigures  % Write out the List of Figures
+
+%% ----------------------------------------------------------------
+\listoftables  % Write out the List of Tables
+
+%% ----------------------------------------------------------------
+\acknowledgements
+{
+El autor agradece la cooperación de todos los miembros de la alianza \textit{Centro de Excelencia y Apropiaci\'{o}n en Internet de las Cosas (CEA-IoT)}. El autor agradece también a todas las instituciones que soportaron este trabajo: el \textit{Ministerio de Tecnolog\'{i}as de la Informaci\'{o}n y las Comunicaciones - MinTIC} y el \textit{Departamento Administrativo de Ciencia, Tecnolog\'{i}a e Innovaci\'{o}n - Colciencias} a través del \textit{Fondo Nacional de Financiamiento para la Ciencia, la Tecnolog\'{i}a y la Innovaci\'{o}n Francisco Jos\'{e} de Caldas} (Proyecto FP44842-502-2015).
+}
+
+%% ----------------------------------------------------------------
+\setstretch{1.5}  % Set the line spacing to 1.5, this makes the following tables easier to read
+\clearpage  % Start a new page
+\listofsymbols{ll}  % Include a list of Abbreviations (a table of two columns)
+{
+\textbf{AMBA} & \textbf{A}dvanced \textbf{M}icrocontroller \textbf{B}us \textbf{A}rchitecture\\
+\textbf{ANN} & \textbf{A}rtificial \textbf{N}eural \textbf{N}etwork \\
+\textbf{AXI} & \textbf{A}dvanced e\textbf{X}tensible \textbf{I}nterface\\
+\textbf{BRAM} & \textbf{B}lock \textbf{R}andom \textbf{A}ccess \textbf{M}emory\\
+\textbf{DSP} & \textbf{D}igital \textbf{S}ignal \textbf{P}rocessor\\
+\textbf{FF} & \textbf{F}lip \textbf{F}lop\\
+\textbf{FPGA} & \textbf{F}ield \textbf{P}rogrammable \textbf{G}ate \textbf{A}rray\\
+\textbf{HDL} & \textbf{H}ardware \textbf{D}escription \textbf{L}anguage \\
+\textbf{HLS} & \textbf{H}igh \textbf{L}evel \textbf{S}ynthesis \\
+%tek La siguiente línea marca un error
+%\textbf{IoT} & \textbf{I}nternet \textbf{o}f \textbf{T}hings\\
+\textbf{IoT} & \textbf{I}nternet of \textbf{T}hings\\
+\textbf{IP} & \textbf{I}ntellectual \textbf{P}roperty\\
+\textbf{LUT} & \textbf{L}ook \textbf{U}p \textbf{T}able\\
+\textbf{MLP} & \textbf{M}ulti \textbf{L}ayer \textbf{P}erceptron \\
+\textbf{OS} & \textbf{O}perating \textbf{S}ystem\\ 
+\textbf{PL} & \textbf{P}rogrammable \textbf{L}ogic \\
+\textbf{PS} & \textbf{P}rocessing \textbf{S}ystem \\
+\textbf{QoS} & \textbf{Q}uality \textbf{o}f \textbf{S}ervice\\
+\textbf{RTL} & \textbf{R}egister \textbf{T}ransfer \textbf{L}anguage\\
+\textbf{SoC} & \textbf{S}ystem \textbf{o}n a \textbf{C}hip \\
+}
+
+%% ----------------------------------------------------------------
+% End of the pre-able, contents and lists of things
+
+\mainmatter	  % Begin normal, numeric (1,2,3...) page numbering
+\pagestyle{fancy}  % Return the page headers back to the "fancy" style
+
+% Include the chapters of the thesis, as separate files
+% Just uncomment the lines as you write the chapters
+\singlespace
+
+\input{./Chapters/Chapter0} % Resumen
+
+\input{./Chapters/Chapter0.1} % Abstract
+
+\input{./Chapters/Chapter1} % Introducción 
+
+\input{./Chapters/Chapter2} % Definición del Problema 
+
+\input{./Chapters/Chapter3} % Objetivos 
+
+\input{./Chapters/Chapter4} % Justificación 
+
+\input{./Chapters/Chapter5} % Alcances 
+
+\input{./Chapters/Chapter6} % Marco Téorico 
+
+\input{./Chapters/Chapter7} % Metodología 
+
+\input{./Chapters/Chapter8} % Recursos 
+
+\input{./Chapters/Chapter8_5} % Recursos 
+
+\input{./Chapters/Chapter9} % Cronograma 
+
+\input{./Chapters/Chapter10}
+
+\input{./Chapters/Chapter11} %Comparación ANN
+
+\input{./Chapters/Chapter12}% Resultados
+
+\input{./Chapters/Chapter14}% Conclusiones
+
+
+%% ----------------------------------------------------------------
+% Now begin the Appendices, including them as separate files
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+%\input{./Appendices/AppendixA}	% Appendix Title
+
+%\input{./Appendices/AppendixB} % Appendix Title
+
+%\input{./Appendices/AppendixC} % Appendix Title
+
+%% ----------------------------------------------------------------
+\addtocontents{toc}{\vspace{2em}}  % Add a gap in the Contents, for aesthetics
+\backmatter
+%% ----------------------------------------------------------------
+\label{Bibliography}
+
+\lhead{\emph{Bibliography}}  % Change the left side page header to "Bibliography"
+%\bibliographystyle{unsrtnat}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliographystyle{ieeetr}
+\bibliography{Bibliography}  % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\end{document}  % The End
+%% ----------------------------------------------------------------

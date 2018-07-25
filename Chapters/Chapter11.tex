@@ -42,6 +42,15 @@ Finalmente la figura \ref{fig:DistN} muestra la distribución de detección nega
 	\label{fig:DistN}
 \end{figure}
 
+Tras analizar la distribución de amba señales se hace necesario analizar punto a punto la señal con tal de determinar que efectivamente ambos modelos están entregando la misma señal para el conjunto de datos entregado. Para ello se eligió calcular la correlación y la correlación cruzada, en el caso de la correlación tenemos un valor de $0.932962076$, siendo el valor de $1$ una señal idéntica. La figura \ref{fig:xcorr} muestra la correlación cruzada entre las señales provenientes del modelo de Matlab y el calculado con el entrenamiento sobre el hardware, se ve claramente que la forma triangular según la teoría sugiere que se trata de una correlación entre dos señales idénticas.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Figures/xcorrANN}
+	\caption{Correlación cruzada entre modelos}
+	\label{fig:xcorr}
+\end{figure}
+
 Con estos datos es posible determinar que la implementación en Hardware es correcta y que funcionalmente se encuentra en capacidad de detectar eficazmente la probabilidad de inundación en comparación con un modelo netamente Software como el propuesto usando las herramientas de Matlab.
 
 Es importante mencionar que el rendimiento de ambas redes tanto la propuesta usando Matlab como la desarrollada en Hardware dependende directamente de la calidad del entrenamiento y el set de datos elegido, es de notar que ambos casos presentan falsos positivos y negativos, pero esto se debe en gran parte a los valores que se encuentran en las transiciones de un valor normal para el río a una posible inundación.

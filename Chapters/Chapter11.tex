@@ -4,45 +4,27 @@
 \label{Chapter12}
 \lhead{Capítulo 12. \emph{Comparación ANN}} % Write in your own chapter
 
-En este capítulo se analizará comparativamente los niveles de detección entre un modelo de Red Neuronal Artificial usando las herramientas de Matlab (nntool) y el modelo en hardware propuesto en este documento en el Capítulo \ref{Chapter6}, figura \ref{fig:MLP}. El objetivo es demostrar que el modelo propuesto es válido y puede ser implementado a nivel de hardware directamente, para esto se eligió mostrar la detección del modelo de la red en punto fijo usando el entrenamiento de Matlab con especificaciones iguales a las del modelo Hardware propuesto, también se usó el entrenamiento directamente sobre el modelo hardware usando C/C++ y finalmente se eligó usar los pesos encontrados usando el entrenamiento de Matlab sobre los pesos del modelo Hardware.
+En este capítulo se analizará comparativamente los niveles de detección entre un modelo de Red Neuronal Artificial usando las herramientas de Matlab (nntool) y el modelo en hardware propuesto en este documento en el Capítulo \ref{Chapter6}, figura \ref{fig:MLP}. El objetivo es demostrar que el modelo propuesto es válido y puede ser implementado a nivel de hardware directamente. Para esto se eligió mostrar la detección del modelo de la red en punto fijo usando el entrenamiento de Matlab con especificaciones iguales a las del modelo Hardware propuesto, por otra parte se usó el entrenamiento directamente sobre el modelo hardware usando C/C++.
 
 \begin{figure}[H]
 	\centering
-		\includegraphics[scale=0.6]{./Figures/TendenciaANN1}
-	\caption{Detección de la ANN Positivo}
-	\label{fig:TendP}
+		\includegraphics[scale=0.35]{./Figures/ROCANN}
+	\caption{Curva ROC de detección}
+	\label{fig:ROC}
 \end{figure}
 
- Las figuras \ref{fig:TendP} y \ref{fig:TendN}, muestran el rendimiento de la red neuronal al detectar o no una posible inundación basado en el entrenamiento y el set de datos elegido. Se observa que el modelo entrenado directamente usando el Hardware (color naranja) presenta más falsos Negativos que el modelo implementado usando Matlab (color azul), también se observa que al usar los pesos sinápticos encontrados con el entrenamiento usando Matlab sobre el modelo Hardare (color gris) presenta un rendimiento similar al modelo de Matlab. Tambien se observa que el modelo Matlab presenta varios falsos Positivos al igual que el modelo Hardware con los pesos encontrados usando Matlab.
+ La Figura \ref{fig:ROC} muestra la curva ROC o Receiver Operating Characteristic por sus siglas en inglés, esta gráfica lo que muestra es la calidad del clasificador al discriminar entre un valor de detección positivo y otro negativo basado en el conjunto de datos de entrenamiento. Particularmente una curva ROC muestra lo siguiente según su forma \citep{ROCCurve}:
  
+ \begin{itemize}
+     \item Se muestra el balance entre la sensibilidad (eje vertical) y la especificidad (eje horizontal), donde un incremento en la sensibilidad va acompañado de un detrimento de la especificadad.
+     \item Entre más cerca la curva esté al eje vertical izquierdo y al eje horizontal superior más efectivo es el clasificador.
+     \item Entre más cerca esté la curva a la diagonal menos efectivo es el clasificador.
+ \end{itemize}
+ 
+ En esta gráfica lo que vemos es que el clasificador tanto en software como en hardware funciona pero debido al entrenamiento presenta algunas detecciones falsas, esto mayoritariamente se debe a las fluctuaciones generadas por el transitorio entre los estados de inundación y sequía propios del conjunto de datos, generando falsos positivos y/o negativos. Esto es posible corregirlo ajustando los parámetros del entrenamiento a tal punto que las fluctuaciones en la detección sean menos notorias, pero particularmente para este problema las transiciones seguirán presentes. Corregir los estados de detección erroneo causados por el entrenamiento y conjunto de datos puede ser corregido ajustando la salida de la RNA con un circuito de retraso que pueda interpretar los rápidos cambios de estado, suavizando la salida de la RNA de tal forma que no se vea afectada la medición final.
 
 
-\begin{figure}[H]
-	\centering
-		\includegraphics[scale=0.6]{./Figures/TendenciaANN2}
-	\caption{Detección de la ANN Negativo}
-	\label{fig:TendN}
-\end{figure}
-
- La figura \ref{fig:DistP} muestra como se encuentran distribuidos los valores de detección Positiva de los modelos, en este caso observamos que el modelo Matlab presenta una distribución muy compacta de los datos con algunos valores atípicos. El modelo Hardware usando los pesos encontrados usando Matlab presenta una distribución de los datos poco menos compacta que el modelo de Matlab pero con datos atípicos más cercanos al valor del detección establecido en el entrenamiento.
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[scale=0.6]{./Figures/Distribucion1}
-	\caption{Distribución de la detección Positivo}
-	\label{fig:DistP}
-\end{figure}
-
-Finalmente la figura \ref{fig:DistN} muestra la distribución de detección negativa del set de datos, aqui se observa que el entrenamiento de la red directamente sobre el Hardare presenta un mejor rendimiento al observar que los datos se encuentran más compactos sobre el nivel negativo de detección $-1$ con la media directamente sobre este nivel.
-
-\begin{figure}[H]
-	\centering
-		\includegraphics[scale=0.6]{./Figures/Distribucion2}
-	\caption{Distribución de la detección Negativo}
-	\label{fig:DistN}
-\end{figure}
-
-Tras analizar la distribución de amba señales se hace necesario analizar punto a punto la señal con tal de determinar que efectivamente ambos modelos están entregando la misma señal para el conjunto de datos entregado. Para ello se eligió calcular la correlación y la correlación cruzada, en el caso de la correlación tenemos un valor de $0.932962076$, siendo el valor de $1$ una señal idéntica. La figura \ref{fig:xcorr} muestra la correlación cruzada entre las señales provenientes del modelo de Matlab y el calculado con el entrenamiento sobre el hardware, se ve claramente que la forma triangular según la teoría sugiere que se trata de una correlación entre dos señales idénticas.
+Tras analizar ambas redes como clasificador, se hace necesario analizar punto a punto la señal con tal de determinar que efectivamente ambos modelos están entregando punto a punto una equivalencia para el conjunto de datos entregado. Para ello se eligió calcular el indice de correlación y la correlación cruzada. En el primer caso, el índice de correlación es de $0.9329$, siendo un valor de $1$ una perfecta relación positiva entre dos señales \citep{correlation2,correlation}. La Figura \ref{fig:xcorr} muestra la correlación cruzada entre las señales provenientes del modelo de Matlab y el calculado con el entrenamiento sobre el hardware. Se ve claramente que, la forma triangular según la teoría sugiere que se trata de una correlación entre dos señales muy similares entre si, confirmando que el entrenamiento y la detección de ambas redes es equivalente.
 
 \begin{figure}[H]
 	\centering
@@ -51,8 +33,7 @@ Tras analizar la distribución de amba señales se hace necesario analizar punto
 	\label{fig:xcorr}
 \end{figure}
 
-Con estos datos es posible determinar que la implementación en Hardware es correcta y que funcionalmente se encuentra en capacidad de detectar eficazmente la probabilidad de inundación en comparación con un modelo netamente Software como el propuesto usando las herramientas de Matlab.
+Con estos datos, es posible determinar que la implementación en Hardware es correcta y que funcionalmente se encuentra en capacidad de detectar eficazmente la probabilidad de inundación en comparación con un modelo netamente Software como el propuesto usando las herramientas de Matlab.
 
-Es importante mencionar que el rendimiento de ambas redes tanto la propuesta usando Matlab como la desarrollada en Hardware dependende directamente de la calidad del entrenamiento y el set de datos elegido, es de notar que ambos casos presentan falsos positivos y negativos, pero esto se debe en gran parte a los valores que se encuentran en las transiciones de un valor normal para el río a una posible inundación.
-
-Los resultados de detección para la red neuronal aquí expuestos implican que es posible usar configuraciones de redes neuronales mucho más complejas que en Matlab son muy simples de configurar y que los resultados del entrenamiento puedan ser llevados a la implementación Hardware sin dudas que la variación en la detección cambie drásticamente sin necesidad de implementar complejos algoritmos de entrenamiento usando C/C++ directamente sobre el hardware como aquí se propuso.
+Es importante mencionar que el rendimiento de ambas redes, tanto la propuesta usando Matlab, como la desarrollada en Hardware dependende directamente de la calidad del entrenamiento y el set de datos elegido.
+%Los resultados de detección para la red neuronal aquí expuestos implican que es posible usar configuraciones de redes neuronales mucho más complejas que en Matlab son muy simples de configurar y que los resultados del entrenamiento puedan ser llevados a la implementación Hardware sin dudas que la variación en la detección cambie drásticamente sin necesidad de implementar complejos algoritmos de entrenamiento usando C/C++ directamente sobre el hardware como aquí se propuso.

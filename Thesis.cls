@@ -212,7 +212,7 @@
       \smallskip
       {\Large  \supname \par}
       \vfill
-      {\large Anteproyecto de grado presentado en cumplimiento parcial para \par}
+      {\large Monografía presentado en cumplimiento parcial para \par}
       {\large el título de Magister en Ingeniería \par}
       \bigskip
       \bigskip

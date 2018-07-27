@@ -4,9 +4,11 @@
 \label{Chapter14}
 \lhead{Capítulo 14. \emph{Conclusiones}} % Write in your own chapter title to set the page header
 
+%primera conclusion sobre el objetivo principal del proyecto: viabilidad de un acelerador de borde
+
 La transformación de altos volúmenes de datos es viable usando dispositivos destinados orientados al Internet de las Cosas con una baja potencia computacional usando hardware. Con un diseño de hardware y las optimizaciones propuestas es posible realizar múltiples operaciones sobre los datos concurrentemente con un bajo footprint sobre el procesador, relegando únicamente la carga operativa a la FPGA y dejando que el procesador atienda los diferentes servicios de red que implican una conexión con la Nube.
 
-Se pudo determinar que es posible implementar directamente el modelo Hardware usando como base un modelo Software con herramientas como Matlab sin necesidad de implementar directamente los complejos algoritmos de entrenamiento sobre el Hardware usando el lenguaje de síntesis de alto nivel, en este caso C/C++.
+Se pudo determinar que es posible implementar directamente el modelo Hardware usando como base un modelo Software con herramientas como Matlab sin necesidad de implementar directamente los complejos algoritmos de entrenamiento sobre el Hardware usando el lenguaje de síntesis de alto nivel, en este caso C/C++.%poner por qué es una alternativa a sysgen
 
 El diseño de hardware propuesto proporciona una ganancia de 4x la velocidad de cálculo sobre su contraparte software con el mismo diseño base, convirtiéndolo en una solución mucho más eficiente para el procesamiento de los datos en el borde de una red IoT.
 

@@ -4,7 +4,7 @@
 \label{Chapter10}
 \lhead{Capítulo 10. \emph{Diseño}} % Write in your own chapter title to set the page header
 
-La investigación basada en el estado del arte Capítulo \ref{Chapter6}, determinó que la estructura que mejor se acopla al tipo de problema es una RNA de tres capas, tres neuronas en la capa de entrada para analizar las variables de Flujo, Precipitación y Humedad Relativa, una capa oculta con mínimo tres neuronas y finalmente una neurona en la capa de salida. Por otra parte, también determinó que es necesario escalar el sistema de detección proporcionalmente según la necesidad de resolución en la medición, esto es necesario cuando se desea determinar con mayor precisión la probabilidad de inundación del área examinada.
+La investigación basada en el estado del arte Capítulo \ref{Chapter6}, determinó que la estructura que mejor se acopla al tipo de problema es una ANN de tres capas, tres neuronas en la capa de entrada para analizar las variables de Flujo, Precipitación y Humedad Relativa, una capa oculta con mínimo tres neuronas y finalmente una neurona en la capa de salida. Por otra parte, también determinó que es necesario escalar el sistema de detección proporcionalmente según la necesidad de resolución en la medición, esto es necesario cuando se desea determinar con mayor precisión el riesgo de inundación del área examinada.
 
 %Dado el problema, según el estado del arte, la mejor estructura de análisis es una Red Neuronal Artificial que pueda recibir al menos 3 datos (Flujo, Precipitación y Humedad Relativa) por nodo de medición. Esta medición debe ser instantánea y dependiendo de las condiciones meteorológicas; es decir, si la probabilidad de una inundación incrementa analizar los datos de los múltiples nodos que componen el ecosistema de monitoreo del río a una frecuencia mas alta, de forma concurrente y poder responder a tiempo ante una emergencia alertando al centro de control local. 
 
@@ -251,7 +251,7 @@ La Tabla \ref{tab:resourcesPostSynt} enseña la cantidad de recursos de la FPGA 
 Con esto se tiene un conjunto de pruebas de cuatro circuitos diferentes para ser analizados en la plataforma de pruebas.
 
 \section{Diseño de Software}
-El diseño consta de múltiples partes. Una de ellas es el diseño de la ANN como tal; el diseño de hardware y optimizaciones a implementar; y, el esquema de reconfiguración dinámico basado en el contexto de ejecución, en este caso el estado o probabilidad de inundación que pueda tener el río en un momento determinado. En esta sección se analizarán los criterios para el diseño del software; en este caso, es la capa que interconecta el hardware diseñado en la sección anterior con el procesador principal ARM A9, usando como medio el kernel de Linux.
+El diseño consta de múltiples partes. Una de ellas es el diseño de la ANN como tal; el diseño de hardware y optimizaciones a implementar; y, el esquema de reconfiguración dinámico basado en el contexto de ejecución, en este caso el estado o riesgo de inundación que pueda tener el río en un momento determinado. En esta sección se analizarán los criterios para el diseño del software; en este caso, es la capa que interconecta el hardware diseñado en la sección anterior con el procesador principal ARM A9, usando como medio el kernel de Linux.
 
 En este caso, el diseño del software implica conocer sobre el user space driver del kernel de Linux, que implica mapear las direcciones físicas de memoria entregadas por el módulo IP implementado en la FPGA a un espacio de memoria virtual manejado por el kernel.
 
@@ -367,9 +367,9 @@ La implementación del driver se ve en la Figura \ref{fig:userSpaceDriverModel}.
 
 \subsection{Diseño del controlador de reconfiguración}
 
-Teniendo en cuenta que se requiere que el controlador monitoree el estado del río mediante el estado de la ANN, se optó por un diseño reactivo del controlador, donde la probabilidad de inundación disparada por la ANN activa los mecanismos de reconfiguración, la velocidad de muestreo y la recepción de datos proveniente de los nodos aledaños.
+Teniendo en cuenta que se requiere que el controlador monitoree el estado del río mediante el estado de la ANN, se optó por un diseño reactivo del controlador, donde el riesgo de inundación disparado por la ANN activa los mecanismos de reconfiguración, la velocidad de muestreo y la recepción de datos proveniente de los nodos aledaños.
 
-La Figura \ref{fig:esquemaFuncionamiento} muestra cómo estaría configurada la FPGA en su modo lazy o flojo, pudiendo atender los datos provenientes de los nodos aledaños cuando el Controlador detecta una probabilidad de inundación; es decir que, la salida de la red ``ANN 1'' sobrepasa el umbral de entre 70\% y 80\%. Cuando el PS detecta una salida de la ``ANN 1'' sobre ese umbral, el procesador reconfigura automáticamente la FPGA para recibir un mayor número de entradas provenientes de campo. Dado que es el mismo circuito, todos estos datos pasarían por la misma interfaz AXI High Performance.
+La Figura \ref{fig:esquemaFuncionamiento} muestra cómo estaría configurada la FPGA en su modo lazy o flojo, pudiendo atender los datos provenientes de los nodos aledaños cuando el Controlador detecta un riesgo de inundación; es decir que, la salida de la red ``ANN 1'' sobrepasa el umbral de entre 70\% y 80\%. Cuando el PS detecta una salida de la ``ANN 1'' sobre ese umbral, el procesador reconfigura automáticamente la FPGA para recibir un mayor número de entradas provenientes de campo. Dado que es el mismo circuito, todos estos datos pasarían por la misma interfaz AXI High Performance.
 
 \begin{figure}[!ht]
 	\centering

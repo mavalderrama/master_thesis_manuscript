@@ -17,12 +17,12 @@ Diseñar el hardware implica tener en cuenta las diferentes etapas del desarroll
 \begin{enumerate}
 \item Desarrollar la ANN usando lenguage C++.
 \item Sintetizar el hardware usando Vivado HLS.
-\item Analizar latencia y uso de recursos obtenidos en el reporte.
+\item Analizar latencia y uso de recursos obtenidos en el reporte de síntesis.
 \item Aplicar optimizaciones de hardware.
 \item Repetir desde 2 hasta obtener el mínimo entre latencia y uso de recursos.
 \end{enumerate}
 
-Para este circuito se determinó que la latencia mínima se podría obtener usando las siguientes optmizaciones luego de analizar el código de la ANN, los bloques de memoria requeridos para realizar los bursts de memoria que provee la interfaz AXI, la cantidad de bucles y la cantidad de tareas que se realizan al interior del hardware.
+Para este circuito se determinó que la latencia mínima se podría obtener usando las siguientes optimizaciones luego de analizar el código de la ANN, los bloques de memoria requeridos para realizar los bursts de memoria que provee la interfaz AXI, la cantidad de bucles y la cantidad de tareas que se realizan al interior del hardware.
 
 \begin{enumerate}
 \item Dataflow: Aplicable a tareas
@@ -253,7 +253,7 @@ Con esto se tiene un conjunto de pruebas de cuatro circuitos diferentes para ser
 \section{Diseño de Software}
 El diseño consta de múltiples partes. Una de ellas es el diseño de la ANN como tal; el diseño de hardware y optimizaciones a implementar; y, el esquema de reconfiguración dinámico basado en el contexto de ejecución, en este caso el estado o riesgo de inundación que pueda tener el río en un momento determinado. En esta sección se analizarán los criterios para el diseño del software; en este caso, es la capa que interconecta el hardware diseñado en la sección anterior con el procesador principal ARM A9, usando como medio el kernel de Linux.
 
-En este caso, el diseño del software implica conocer sobre el user space driver del kernel de Linux, que implica mapear las direcciones físicas de memoria entregadas por el módulo IP implementado en la FPGA a un espacio de memoria virtual manejado por el kernel.
+En este caso, el diseño del software requiere conocer sobre el user space driver del kernel de Linux, que a su vez implica mapear las direcciones físicas de memoria entregadas por el módulo IP implementado en la FPGA a un espacio de memoria virtual manejado por el kernel.
 
 La Figura \ref{fig:userSpaceDriver} muestra la mecánica de un driver funcionando bajo un esquema de espacio de usuario: el dispositivo hardware, en este caso ``Device'', recibe y escribe la información que necesita bajo una dirección física de memoria. El usuario, para acceder a esas direcciones de memoria, debe conocer la dirección base física a la cual el dispositivo está accediendo, el cual es provisto por el diseñador del hardware o en este caso el sintetizador HLS y el tamaño de paginación de memoria que entrega el SO. Con esto, el driver puede mapear la dirección de memoria a una virtual a la cual la aplicación pueda acceder como una referencia de memoria; en el caso de C/C++, como un apuntador que puede ser manipulado según sea necesario.
 

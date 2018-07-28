@@ -36,16 +36,6 @@ Al final, la nube como el pilar fundamental, ofrece potencia de cálculo y por e
 	\label{fig:IoTFogGr}
 \end{figure}
 
-\subsection{Síntesis de Alto Nivel \textit{HLS}}
-
-La síntesis de alto nivel (\textit{HLS}, por las siglas en inglés de \textit{High-Level Sythesis}), le permite al desarrollador programar hardware usando lenguajes con altos niveles de abstracción como lo son C/C++, sin necesidad de hacer uso de lenguajes de descripción de hardware como VHDL o Verilog, cuyo desarrollo y simulación es lento y complejo comparado con el tiempo que toma desarrollar en un lenguaje de alto nivel. Actualmente, la tercera generación de compiladores de HLS ofrece a los desarrolladores ventajas significativas frente a las revisiones anteriores como lo son la optimización del proceso de síntesis de hardware, la estandarización del uso de C, C++ y System C como lenguajes de entrada al software de síntesis y la posibilidad de adicionar directivas de optimización sin realizar modificaciones al código fuente, co-simulación entre los diferentes lenguajes de entrada y el RTL objetivo, entre otras \cite{HLStory}.
-
-Las bondades de HLS frente a los paradigmas de programación de hardware tradicionales son muchas como se mencionó anteriormente. Una de ellas y quizá de las más importantes, es la aplicación de optimizaciones de hardware que, según el contexto, puede incrementar el rendimiento de un circuito, modificando la cantidad de hardware dedicado al procesamiento de cada tarea \cite{HLSeffect,canis2013legup}. 
-
-Por otra parte, HLS provee al desarrollador la opción de crear hardware reconFigurable de forma dinámica; esto es conocido como reconFiguración parcial o \textit{PR} por sus siglas en inglés. La aplicación de la reconFiguración parcial le permite al desarrollador integrar múltiples módulos de hardware con diferentes algoritmos que pueden ser instanciados sobre la superficie de la FPGA de forma dinámica \citep{kao2005benefits,wehner2014using,owens2013design}, con el objetivo de tener en un único dispositivo, múltiples funciones sin la necesidad de reprogramar la FPGA completamente.
-
-Entre los proyectos orientados a usar netamente HLS como medio de prototipado e implementación de sistemas hardware, se pueden encontrar soluciones desde, optimizar procesos de kernel de un S.O., pasando por acceder y modificar bases de datos de forma concurrente usando paralelismo y finalizando con la fusión de datos  \citep{liu2013soft,monson2015using,navarro2013high,malazgirt2015high,choi2013software,alias2013optimizing,zhao2015area,liu2015moving}.
-
 \subsection{Computación Consciente del Contexto}
 
 Cuando se habla de grandes cantidades de datos recolectada por miles de sensores dentro de un esquema de IoT, se pone sobre la mesa una pregunta: ¿Cómo interpretar los datos?. Es importante notar que por más información que se tenga disponible, si no se analiza, interpreta y entiende dentro de un contexto dado, esta información no tiene valor alguno.
@@ -105,7 +95,15 @@ Para ello se proponen diferentes soluciones; una de ellas, es una solución mult
 
 La predicción oportuna y efectiva de inundaciones depende de varios factores; algunos de ellos están clasificados en la Tabla \ref{tab:floodAtributes} y hay otros, como la ubicación estratégica de los nodos de medición, siendo este el factor que más puede influenciar en la predicción, pues es necesario que la información no se vea solapada y que el modelo se encuentre correctamente establecido para la zona. Por ejemplo, en \citep{floodAtributes}, se propone una distribución hexagonal de los diferentes nodos; en \citep{floodfc3} se propone distribuir los sensores a lo largo de la cuenca del río a analizar. Por otro lado, la precisión de la predicción se ve afectada por la configuración y tipo de modelo usado, como por ejemplo, modelos hidrológicos e hidrodinámicos que permiten tener simulaciones bastante precisas \citep{merkuryeva2015advanced,ANN3} que son complejos y requieren análisis, medidas de los ríos y conocimientos específicos para que sean factibles. Finalmente, están los basados en redes neuronales, que son adaptables a la gran cantidad de información y variables que se requieren para realizar una predicción sin conocer específicamente la relación entre las entradas y las salidas del sistema; lo que se busca con estos modelos es tener una predicción en línea, con bajas latencias y sin necesidad de realizar un post-procesamiento de los datos en servidores lejos de la zona de interés. Estas aproximaciones han sido usadas para estimar el nivel de los ríos usando hardware embebido \cite{ANN1,ANN2,ANN3,ANN4,ANN5,ANN6,ANN7}.
 
-\section{Síntesis de Alto Nivel}
+\section{Síntesis de Alto Nivel \textit{HLS}}
+
+La síntesis de alto nivel (\textit{HLS}, por las siglas en inglés de \textit{High-Level Synthesis}), le permite al desarrollador programar hardware usando lenguajes con altos niveles de abstracción como lo son C/C++/System C/C\#, sin necesidad de hacer uso de lenguajes de descripción de hardware como VHDL o Verilog, cuyo desarrollo y simulación es lento y complejo comparado con el tiempo que toma desarrollar en un lenguaje de alto nivel. Actualmente, la tercera generación de compiladores de HLS ofrece a los desarrolladores ventajas significativas frente a las revisiones anteriores como lo son la optimización del proceso de síntesis de hardware, la estandarización del uso de C, C++, System C o C\# como lenguajes de entrada al software de síntesis y la posibilidad de adicionar directivas de optimización sin realizar modificaciones al código fuente, co-simulación entre los diferentes lenguajes de entrada y el RTL objetivo, entre otras \cite{HLStory}.
+
+Las bondades de HLS frente a los paradigmas de programación de hardware tradicionales son muchas como se mencionó anteriormente. Una de ellas y quizá de las más importantes, es la aplicación de optimizaciones de hardware que, según el contexto, puede incrementar el rendimiento de un circuito, modificando la cantidad de hardware dedicado al procesamiento de cada tarea \cite{HLSeffect,canis2013legup}. 
+
+Por otra parte, HLS provee al desarrollador la opción de crear hardware reconFigurable de forma dinámica; esto es conocido como reconFiguración parcial o \textit{PR} por sus siglas en inglés. La aplicación de la reconFiguración parcial le permite al desarrollador integrar múltiples módulos de hardware con diferentes algoritmos que pueden ser instanciados sobre la superficie de la FPGA de forma dinámica \citep{kao2005benefits,wehner2014using,owens2013design}, con el objetivo de tener en un único dispositivo, múltiples funciones sin la necesidad de reprogramar la FPGA completamente.
+
+Entre los proyectos orientados a usar netamente HLS como medio de prototipado e implementación de sistemas hardware, se pueden encontrar soluciones desde, optimizar procesos de kernel de un S.O., pasando por acceder y modificar bases de datos de forma concurrente usando paralelismo y finalizando con la fusión de datos  \citep{liu2013soft,monson2015using,navarro2013high,malazgirt2015high,choi2013software,alias2013optimizing,zhao2015area,liu2015moving}.
 
 \subsection{Herramientas de Síntesis}
 
@@ -152,7 +150,7 @@ La diferencia entre cada uno de los sintetizadores radica principalmente en la c
 
 \subsubsection{Optimizaciones de Hardware}
 
-Cada sintetizador puede ofrecer una gama diferente de optimizaciones; estas pueden ser aplicadas al código fuente usando una directiva del lenguaje, como por ejemplo,\textbf{pragma} en el caso de C y sus derivados. A través de ella, se le indican directamente al compilador,  parámetros de entrada como conFiguraciones dependiendo del tipo de optimización a aplicar.
+Cada sintetizador puede ofrecer una gama diferente de optimizaciones; estas pueden ser aplicadas al código fuente usando una directiva del lenguaje, como por ejemplo, \textbf{pragma} en el caso de C y sus derivados. A través de ella, se le indican directamente al compilador,  parámetros de entrada como conFiguraciones dependiendo del tipo de optimización a aplicar.
 
 Para el caso particular de Vivado HLS, la Tabla \ref{tab:HLS} muestra las directivas de optimización y una breve descripción del propósito.
 

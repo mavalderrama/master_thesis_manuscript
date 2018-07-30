@@ -101,7 +101,7 @@ La síntesis de alto nivel (\textit{HLS}, por las siglas en inglés de \textit{H
 
 Las bondades de HLS frente a los paradigmas de programación de hardware tradicionales son muchas como se mencionó anteriormente. Una de ellas y quizá de las más importantes, es la aplicación de optimizaciones de hardware que, según el contexto, puede incrementar el rendimiento de un circuito, modificando la cantidad de hardware dedicado al procesamiento de cada tarea \cite{HLSeffect,canis2013legup}. 
 
-Por otra parte, HLS provee al desarrollador la opción de crear hardware reconFigurable de forma dinámica; esto es conocido como reconfiguración parcial o \textit{PR} por sus siglas en inglés. La aplicación de la reconfiguración parcial le permite al desarrollador integrar múltiples módulos de hardware con diferentes algoritmos que pueden ser instanciados sobre la superficie de la FPGA de forma dinámica \citep{kao2005benefits,wehner2014using,owens2013design}, con el objetivo de tener en un único dispositivo, múltiples funciones sin la necesidad de reprogramar la FPGA completamente.
+Por otra parte, HLS provee al desarrollador la opción de crear hardware reconFigurable de forma dinámica; esto es conocido como reconFiguración parcial o \textit{PR} por sus siglas en inglés. La aplicación de la reconFiguración parcial le permite al desarrollador integrar múltiples módulos de hardware con diferentes algoritmos que pueden ser instanciados sobre la superficie de la FPGA de forma dinámica \citep{kao2005benefits,wehner2014using,owens2013design}, con el objetivo de tener en un único dispositivo, múltiples funciones sin la necesidad de reprogramar la FPGA completamente.
 
 Entre los proyectos orientados a usar netamente HLS como medio de prototipado e implementación de sistemas hardware, se pueden encontrar soluciones desde, optimizar procesos de kernel de un S.O., pasando por acceder y modificar bases de datos de forma concurrente usando paralelismo y finalizando con la fusión de datos  \citep{liu2013soft,monson2015using,navarro2013high,malazgirt2015high,choi2013software,alias2013optimizing,zhao2015area,liu2015moving}.
 
@@ -150,7 +150,7 @@ La diferencia entre cada uno de los sintetizadores radica principalmente en la c
 
 \subsubsection{Optimizaciones de Hardware}
 
-Cada sintetizador puede ofrecer una gama diferente de optimizaciones; estas pueden ser aplicadas al código fuente usando una directiva del lenguaje, como por ejemplo, \textbf{pragma} en el caso de C y sus derivados. A través de ella, se le indican directamente al compilador,  parámetros de entrada como configuraciones dependiendo del tipo de optimización a aplicar.
+Cada sintetizador puede ofrecer una gama diferente de optimizaciones; estas pueden ser aplicadas al código fuente usando una directiva del lenguaje, como por ejemplo, \textbf{pragma} en el caso de C y sus derivados. A través de ella, se le indican directamente al compilador,  parámetros de entrada como conFiguraciones dependiendo del tipo de optimización a aplicar.
 
 Para el caso particular de Vivado HLS, la Tabla \ref{tab:HLS} muestra las directivas de optimización y una breve descripción del propósito.
 

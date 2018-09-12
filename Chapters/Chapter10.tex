@@ -106,7 +106,7 @@ neuron missing/.style={
 \label{fig:networkDesign}
 \end{figure}
  
-\subsection{Función de salida de la red neuronal}
+\subsubsection{Función de salida de la red neuronal}
 
 Uno de los parámetros que más influye en la veracidad de la estimación de una red neuronal es la función de activación de las neuronas, ver Tabla \ref{tab:funactivacion}. Según el estado del arte, la función de activación más común para este tipo de problemas es la función tangente sigmoidal \citep{floodfc1}, representada en la Ecuación \ref{eq:tansig} y la Figura \ref{fig:tansig}.
 
@@ -123,7 +123,67 @@ Uno de los parámetros que más influye en la veracidad de la estimación de una
 
 La Ecuación \ref{eq:tansig} muestra que, para calcular la función tangente sigmoidal, es necesario realizar cómputos de complejos como los exponenciales que se pueden ver altamente afectados por el error que pueda introducir la unidad que los pueda calcular. Por otra parte, implementar este tipo de cálculos directamente sobre el hardware de la FPGA sería altamente costoso en términos de recursos y latencia por el simple hecho de utilizar punto flotante. Para resolver el problema se optó por realizar una implementación donde se discretiza la función continua, de tal forma que el bus de direcciones alcance máximo 12bits, es decir 4096 posiciones de memoria (se eligen 12b debido a que el sintetizador presenta problemas si se elige un bus de direcciones más grande al mapear una memoria ROM).
 
-\subsection{Código fuente Red Neuronal Artificial}
+\subsection{Entrenamiento de la Red Neuronal Artificial}
+
+Dado que es necesario que la Red Neuronal Artificial quede uniformemente entrenada, se optó por entrenarla usando las librerias provistas por el sintetizador de alto nivel. Para esto, se implementó directamente en hardware el algoritmo de entrenamiento Backpropagation descrito en \citep{backprop}, esto implica que cada uno de los valores de error que son calculados sobre las memorias sean uniformemente tratados según el criterio que establece la libreria de punto fijo del sintetizador Vivado HLS.
+
+
+\subsubsection{Base de Datos de Entrenamiento}
+
+La base de datos usada para el entrenamiento fue obtenida del Servicio Meteorológico de Estados Unidos cuya base datos es provista por el NOAA \href{https://water.weather.gov/ahps/}{https://water.weather.gov/ahps/}. Para esto se usó la información del río mississippi proveniente de 7 estaciones meteorológicas (Vicksburg, Natchez, River Landing, Baton Rouge, Donaldsville, Reserve, New Orleans). El conjunto de datos total aporta un total de 2591 puntos, los cuales se eligió el 80\% para entrenamiento y el 20\% restante para validación.
+
+Es de notar que el Servicio Meteorológico de Estados Unidos, tiene definidos los modelos de inundación según el mes en el que se encuentra, adicional define para sus diferentes nodos cuales son los niveles del río para los cuales se define que existe una inundación.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.7]{./Figures/weather}
+	\caption{Modelo de inundación NOAA}
+	\label{fig:weatherMississippi}
+\end{figure}
+
+En la figura \ref{fig:weatherMississippi} se observa el modelo que entrega el Servicio Meteorológico y los diferentes niveles y caudales que provocan las inundaciones marcadas en color Naranja, Rojo y Purpura, siendo el Purpura el nivel de inundación crítico.
+
+\subsubsection{Criterios de Entrenamiento}
+Dado que el entrenamiento usando el algoritmo de Backpropagation requiere diferentes condiciones para que el algoritmo converja hacia un mínimo de error aceptable establecido (error cuadrático medio MSE), típicamente lo mas cercano a cero, por tanto:
+\begin{itemize}
+    \item $MSE < 0.02$
+    \item Tasa de aprendizaje $= 0.25$
+    \item EPOCHS para alcanzar Error deseado: $203$
+\end{itemize}
+
+\subsubsection{Pesos Sinápticos}
+Una vez finalizado el entrenamiento se alcanzaron los siguientes pesos sinápticos.
+
+Capa Oculta Neurona 1
+\begin{itemize}
+    \item Entrada 1: $16.1332$
+    \item Entrada 2: $-0.0895447$
+    \item Entrada 3: $0.00101262$
+    \item Bias: $-11.0182$
+\end{itemize}
+Capa Oculta Neurona 2
+\begin{itemize}
+    \item Entrada 1: $27.9825$
+    \item Entrada 2: $0.142754$
+    \item Entrada 3: $0.381713$
+    \item Bias: $-19.3304$
+\end{itemize}
+Capa Oculta Neurona 3
+\begin{itemize}
+    \item Entrada 1: $-28.3475$
+    \item Entrada 2: $-0.242051$
+    \item Entrada 3: $-0.357384$
+    \item Bias: $19.5775$
+\end{itemize}
+Capa Salida Neurona 1
+\begin{itemize}
+    \item Entrada 1: $0.692534$
+    \item Entrada 2: $1.22846$
+    \item Entrada 3: $-1.24472$
+    \item Bias: $-0.415607$
+\end{itemize}
+
+\subsubsection{Código fuente Red Neuronal Artificial}
 
 A continuación se muestra de forma simplificada el diseño de la ANN en código fuente usando el lenguaje de programación C++
 
@@ -147,6 +207,8 @@ TOPANN ( fix *Inputs, fix *Outputs, fix *layerWeight, fix *layerBias,
 \end{verbatim}
 
 Como se observa en el código anterior, la única diferencia entre una red de $3$ entradas y una de $N$ entradas son las definiciones de \texttt{DATASET\_INPUTS} y \texttt{NEURONS}, que definen respectivamente, cuántas entradas va a tener la red y la cantidad de neuronas en la capa oculta. Es por esto que se hace necesario sintetizar la cantidad de circuitos como variaciones de estas configuraciones.
+
+
 
 \subsection{Puertos de entrada y salida AXI}
 
@@ -172,7 +234,7 @@ La Figura \ref{fig:latIntFloat} muestra la latencia e intervalo de datos para la
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[scale=0.45]{Figures/LATINTFLOAT}
-	\caption{Latencia e intervalo de las optimizaciones en float}
+	\caption{Latencia e intervalo de las optimizaciones en punto flotante}
 	\label{fig:latIntFloat}
 \end{figure}
 
@@ -183,7 +245,7 @@ La Figura \ref{fig:perfGainFloat} muestra la ganancia de cada una de las optimiz
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[scale=0.45]{Figures/PERFGAINFLOAT}
-	\caption{Ganancia en rendimiento usando float}
+	\caption{Ganancia en rendimiento usando punto flotante}
 	\label{fig:perfGainFloat}
 \end{figure}
 
@@ -192,7 +254,7 @@ La Figura \ref{fig:latIntFix} muestra los resultados de síntesis para las misma
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[scale=0.45]{Figures/LATINTFIX}
-	\caption{Latencia e intervalo de las optimizaciones fijo}
+	\caption{Latencia e intervalo de las optimizaciones punto fijo}
 	\label{fig:latIntFix}
 \end{figure}
 
@@ -201,7 +263,7 @@ En este caso se observa un claro ganador; este puede ser corroborado por la Figu
 \begin{figure}[!ht]
 	\centering
 		\includegraphics[scale=0.45]{Figures/PERFGAINFIX}
-	\caption{Ganancia en rendimiento en float}
+	\caption{Ganancia en rendimiento en punto fijo}
 	\label{fig:perfGainFix}
 \end{figure}
 

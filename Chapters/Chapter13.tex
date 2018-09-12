@@ -1,74 +1,37 @@
 % Chapter 13
 
-\chapter{Análisis de Resultados} % Write in your own chapter title
+\chapter{Comparación Modelo de la ANN} % Write in your own chapter title
 \label{Chapter13}
-\lhead{Capítulo 13. \emph{Resultados}} % Write in your own chapter title to set the page header
+\lhead{Capítulo 13. \emph{Comparación ANN}} % Write in your own chapter
 
-En este capítulo se muestran los resultados obtenidos en la implementación del hardware. Para esto se siguió la metodología descrita en el capítulo \ref{Chapter11}: 
+%En este capítulo se analizarán comparativamente los niveles de detección entre un modelo de ANN usando las herramientas de Matlab (nntool) y el modelo en hardware propuesto en este documento en el Capítulo \ref{Chapter6}, Figura \ref{fig:MLP}. El objetivo es demostrar que el modelo propuesto es válido y puede ser implementado a nivel de hardware directamente. Para esto se eligió mostrar la detección del modelo de la red en punto fijo usando el entrenamiento de Matlab con especificaciones iguales a las del modelo Hardware propuesto. Por otra parte, se usó el entrenamiento directamente sobre el modelo hardware usando C/C++.
+
+Es importante mencionar que el rendimiento de una ANN depende directamente de la calidad del entrenamiento y del conjunto de datos elegido. Por lo tanto, en este capítulo se analizarán comparativamente los niveles de detección entre un modelo de ANN usando las herramientas de Matlab (nntool) frente al modelo en hardware propuesto en este documento en el Capítulo \ref{Chapter10}, Figura \ref{fig:networkDesign}. El objetivo es demostrar que el modelo propuesto es válido y puede ser implementado a nivel de hardware directamente. Para esto se eligió mostrar la detección del modelo de la red en punto fijo usando el entrenamiento de Matlab.
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[scale=0.35]{./Figures/ROCANN}
+	\caption{Curva ROC de detección}
+	\label{fig:ROC}
+\end{figure}
+
+ La Figura \ref{fig:ROC} muestra la curva ROC o \textit{Receiver Operating Characteristic} por sus siglas en inglés. Esta gráfica lo que muestra es la calidad del clasificador al discriminar entre un valor de detección positivo y otro negativo basado en el conjunto de datos de entrenamiento. Particularmente, una curva ROC muestra lo siguiente según su forma \citep{ROCCurve}:
  
- \section{Benchmark}
-Dada la necesidad de medir el rendimiento del circuito implementado en HW contra la versión SW, se determinó que la mejor métrica se obtendría realizando un Benchmark de tres etapas con ejecuciones de 100 (\textbf{SW\_ 100M}) y 300 millones de operaciones por ejecución (\textbf{SW\_ 300M}), con la implementación en HW funcionando a 100MHz (\textbf{HW\_ 100M\_ 100MHz}, \textbf{HW\_ 300M\_ 100MHz}) y 150MHz (\textbf{HW\_ 100M\_ 150MHz}, \textbf{HW\_ 300M\_ 150MHz}), que son las frecuencias de reloj recomendadas por el sintetizador de alto nivel. La prueba consiste en cargar las neuronas de entrada y calcular el tiempo que le tomó a ambas aproximaciones realizar el cálculo del resultado.
+ \begin{itemize}
+     \item Se muestra el balance entre la sensibilidad (eje vertical) y la especificidad (eje horizontal), donde un incremento en la sensibilidad va acompañado de un detrimento de la especificidad.
+     \item Entre más cerca la curva esté al eje vertical izquierdo y al eje horizontal superior, más efectivo es el clasificador.
+     \item Entre más cerca esté la curva a la diagonal, menos efectivo es el clasificador.
+ \end{itemize}
+ 
+A partir de la curva ROC es entonces posible determinar que el modelo se encuentra en capacidad de detectar eficazmente el riesgo de inundación y que el modelo en Matlab presenta un desempeño aceptable para el propósito planteado, cual es el de presentar una plataforma de computación de borde con capacidad de acelerar el procesamiento y análisis de múltiples fuentes de datos. Por ello, no se invirtió más tiempo en sintonizar los parámetros de entrenamiento del modelo, lo que ocasiona que este presente algunas detecciones falsas; esto mayoritariamente se debe a las fluctuaciones generadas por el transitorio entre los estados de inundación y sequía propios del conjunto de datos, generando falsos positivos y/o negativos. Esto es posible corregirlo ajustando los parámetros del entrenamiento a tal punto que las fluctuaciones en la detección sean menos notorias, pero particularmente para este problema las transiciones podrían seguir presentes. Ajustando la salida de la ANN con un circuito de retraso que pueda amortiguar los cambios de estado permitiría filtrar la salida de la ANN de tal forma que no se vea afectada la medición final.
 
-Como se observa en la Figura \ref{fig:benchmark}, las implementaciones \textbf{HW\_ 100M\_ 100MHz}, \textbf{HW\_ 100M\_ 150MHz}, \textbf{HW\_ 300M\_ 100MHz} y \textbf{HW\_ 300M\_ 150MHz} comparado con las implementaciones \textbf{SW\_ 100M} y \textbf{SW\_ 300M} la aceleración es aproximadamente cuatro veces. Esta prueba lo que busca es saturar el bus AMBA cargando y exigiendo al máximo el pipeline del bus usando las optimizaciones burst de la interfaz AXI. A diferencia de la implementación HW, la implementación software realiza una carga de las neuronas de entrada de forma secuencial adicionando un tiempo de carga alto debido a los múltiples llamados al bus que se encarga de la RAM.
-
-%tek Revisar los valores numéricos
-
- \begin{figure}[!ht]
-	\centering
-		\includegraphics[scale=0.6]{Figures/performanceBenchmark}
-	\caption{Benchmark resultados de la implementación}
-	\label{fig:benchmark}
-\end{figure}
-
-
-\clearpage
-
-\section{Análisis de tiempo y recursos}
-\subsection{Tiempo de ejecución}
-
-En la Figura \ref{fig:generalPerformance} se observan los resultados de la implementación de diferentes estrategias de optimización del hardware; en este caso tenemos: 
-\begin{itemize}
-
-\item WO-OPT: Sin optimizaciones.
-
-\item P-UNROLL: Pipelining a nivel de bucles combinado con Unroll a los bucles.
-
-\item DATAFLOW: Pipelining a nivel de tareas.
-
-\item AO: Optimización de área.
-
-\item PO: Pipelining a nivel de tareas, bucles y unroll
-
-\end{itemize}
-
- \begin{figure}[!ht]
-	\centering
-		\includegraphics[scale=0.6]{Figures/generalPerformance}
-	\caption{Rendimiento del acelerador en Hardware}
-	\label{fig:generalPerformance}
-\end{figure}
-
-La Figura muestra claramente que la estrategia ``PO'' ofrece el mejor rendimiento en tiempo de ejecución de las tareas, siendo la estrategia a implementar en producción.
-
-\clearpage
-
-\subsection{Recursos utilizados}
-Una vez determinados los tiempos de ejecución, se hace necesario tener en cuenta el área o la cantidad de recursos necesarios para cumplir las diferentes tareas de la solución. En este caso se analizó la cantidad de recursos para cada estrategia teniendo en cuenta el reporte del sintetizador de hardware Vivado.
-
-La Figura \ref{fig:usedResources} muestra el porcentaje de recursos usados por cada una de las diferentes estrategias. Es importante notar que la estrategia ``AO'' usa 51\% menos LUT, 42\% menos DSPs y 37\% menos BRAM que su contraparte ``PO'' para un rendimiento casi marginal en tiempo.
+Finalmente, se hace necesario comparar punto a punto la salida de la ANN con el fin de determinar que, efectivamente tanto el modelo en Matlab como su correspondiente implementación en hardware, están entregando una equivalencia para el conjunto de datos entregado. Para ello se eligió calcular el índice de correlación y la correlación cruzada. En el primer caso, el índice de correlación es de $0.9329$, siendo un valor de $1$ una perfecta relación positiva entre dos señales \citep{correlation2,correlation}. La Figura \ref{fig:xcorr} muestra la correlación cruzada entre las señales provenientes del modelo de Matlab y el calculado con el entrenamiento sobre el hardware. Se ve claramente que, según la teoría, la forma triangular sugiere que se trata de una correlación entre dos señales muy similares entre sí, confirmando que el entrenamiento y la detección de ambas redes es equivalente.
 
 \begin{figure}[!ht]
 	\centering
-		\includegraphics[scale=0.6]{Figures/usedResources}
-	\caption{Recursos utilizados en la FPGA}
-	\label{fig:usedResources}
+		\includegraphics[scale=0.6]{./Figures/xcorrANN}
+	\caption{Correlación cruzada entre modelos}
+	\label{fig:xcorr}
 \end{figure}
 
-La Figura \ref{fig:performanceResources} muestra claramente que la estrategia ``AO'' es aproximadamente 46\% más eficiente que su contraparte ``PO''. De esta forma, es posible determinar que, al usar menos área vamos a obtener un mejor delta de eficiencia, pues al usar menos recursos es posible adicionar más módulos de hardware o, en otros casos, usar menos potencia en tiempo de ejecución.
-
-\begin{figure}[!ht]
-	\centering
-		\includegraphics[scale=0.6]{Figures/performanceResources}
-	\caption{Factor de ganancia recursos contra tiempo}
-	\label{fig:performanceResources}
-\end{figure}
+%Los resultados de detección para la red neuronal aquí expuestos implican que es posible usar configuraciones de redes neuronales mucho más complejas que en Matlab son muy simples de configurar y que los resultados del entrenamiento puedan ser llevados a la implementación Hardware sin dudas que la variación en la detección cambie drásticamente sin necesidad de implementar complejos algoritmos de entrenamiento usando C/C++ directamente sobre el hardware como aquí se propuso.

@@ -1,25 +1,74 @@
 % Chapter 14
 
-\chapter{Conclusiones} % Write in your own chapter title
+\chapter{Análisis de Resultados} % Write in your own chapter title
 \label{Chapter14}
-\lhead{Capítulo 14. \emph{Conclusiones}} % Write in your own chapter title to set the page header
+\lhead{Capítulo 14. \emph{Resultados}} % Write in your own chapter title to set the page header
 
-De acuerdo con la revisión del estado del arte no se encontró una solución que articule las dimensiones de aceleración y reconfiguración dinámica del hardware en una plataforma de computación de borde usando un esquema orientado al Internet de las Cosas, por lo cual se considera que el enfoque que se plantea en este trabajo es la principal contribución del mismo.
+En este capítulo se muestran los resultados obtenidos en la implementación del hardware. Para esto se siguió la metodología descrita en el capítulo \ref{Chapter11}: 
+ 
+ \section{Benchmark}
+Dada la necesidad de medir el rendimiento del circuito implementado en HW contra la versión SW, se determinó que la mejor métrica se obtendría realizando un Benchmark de tres etapas con ejecuciones de 100 (\textbf{SW\_ 100M}) y 300 millones de operaciones por ejecución (\textbf{SW\_ 300M}), con la implementación en HW funcionando a 100MHz (\textbf{HW\_ 100M\_ 100MHz}, \textbf{HW\_ 300M\_ 100MHz}) y 150MHz (\textbf{HW\_ 100M\_ 150MHz}, \textbf{HW\_ 300M\_ 150MHz}), que son las frecuencias de reloj recomendadas por el sintetizador de alto nivel. La prueba consiste en cargar las neuronas de entrada y calcular el tiempo que le tomó a ambas aproximaciones realizar el cálculo del resultado.
 
-En particular, se muestra que el procesamiento y fusión de altos volúmenes de datos en el borde de una red IoT es posible usando dispositivos orientados al Internet de las Cosas con hardware para incrementar la potencia de cálculo y software especializado para coordinar y adicionar funcionalidad basado en esquemas de reconfiguración dinámica del hardware. Con un diseño de hardware y las optimizaciones propuestas, es posible realizar múltiples operaciones sobre los datos concurrentemente con un bajo footprint sobre el procesador, relegando únicamente la carga operativa a la FPGA y dejando que el procesador atienda los diferentes servicios de red que implican una conexión con la Nube.
+Como se observa en la Figura \ref{fig:benchmark}, las implementaciones \textbf{HW\_ 100M\_ 100MHz}, \textbf{HW\_ 100M\_ 150MHz}, \textbf{HW\_ 300M\_ 100MHz} y \textbf{HW\_ 300M\_ 150MHz} comparado con las implementaciones \textbf{SW\_ 100M} y \textbf{SW\_ 300M} la aceleración es aproximadamente cuatro veces. Esta prueba lo que busca es saturar el bus AMBA cargando y exigiendo al máximo el pipeline del bus usando las optimizaciones burst de la interfaz AXI. A diferencia de la implementación HW, la implementación software realiza una carga de las neuronas de entrada de forma secuencial adicionando un tiempo de carga alto debido a los múltiples llamados al bus que se encarga de la RAM.
 
-La elección del hardware y los recursos necesarios para la implementación de una plataforma de computación de borde están basados netamente en las necesidades que se desean cumplir. En este caso, hay indicios de que con un hardware (procesador, memoria, almacenamiento) relativamente limitado es posible prototipar y posteriormente desplegar en producción un dispositivo enteramente capaz de realizar el trabajo de otros dispositivos con TDP mucho más altos. 
+%tek Revisar los valores numéricos
 
-Se determinó que es posible implementar directamente el modelo Hardware entrenado, garantizando el funcionamiento y detección basado en un modelo software usando las herramientas de desarrollo y entrenamiento de Matlab.
+ \begin{figure}[!ht]
+	\centering
+		\includegraphics[scale=0.6]{Figures/performanceBenchmark}
+	\caption{Benchmark resultados de la implementación}
+	\label{fig:benchmark}
+\end{figure}
 
-Más aún, una implementación directamente sobre el hardware permite tener control fino sobre las diferentes etapas de optimización, manipulación de los datos y consumo de recursos de hardware a diferencia de implementaciones usando las herramientas de Matlab como System Generator que permiten sintetizar hardware a un nivel muy alto sin opciones de optimización y consumo de recursos para sistemas como el propuesto en el que el hardware es muy limitado.
 
-Como parte de la funcionalidad de la plataforma, se integraron exitosamente los múltiples módulos de hardware como bloques IP en forma de repositorio; estos se encuentran almacenados al interior de la memoria micro SD que contiene el File System y la configuración de arranque del sistema operativo. Esto con el objetivo de que la plataforma de computación de borde tenga a disposición local los módulos que permitan la reconfiguración de la FPGA en tiempo de ejecución.
+\clearpage
 
-El diseño de hardware propuesto proporciona una ganancia de 4x la velocidad de cálculo sobre su contraparte software con el mismo diseño base, convirtiéndolo en una solución mucho más eficiente para el procesamiento de los datos en el borde de una red IoT. Además, con las optimizaciones de área correctas es posible integrar múltiples módulos IP que realicen diferentes operaciones y transformaciones sobre los datos, sacrificando rendimiento que puede o no ser notable, dependiendo de la complejidad y optimizaciones de hardware que requiera el circuito.
+\section{Análisis de tiempo y recursos}
+\subsection{Tiempo de ejecución}
 
-La implementación de una solución como la propuesta requiere de pasos muy precisos en la configuración del kernel, más aún si se desean características especificas como un sistema de archivos de Ubuntu o módulos de hardware como una DMA para video o para mover grandes bloques de datos de una región a otra de memoria. Con una arquitectura como la propuesta es posible configurar la FPGA en tiempo de ejecución del Kernel de Linux y adicionar nuevos binarios y configuraciones al sistema de archivos usando un servidor sftp y un cliente como FileZilla.
+En la Figura \ref{fig:generalPerformance} se observan los resultados de la implementación de diferentes estrategias de optimización del hardware; en este caso tenemos: 
+\begin{itemize}
 
-Se estableció que el ancho en bits del bus de datos del circuito hardware no influye sobre la latencia total del circuito, con lo cual se pudo implementar un ancho de datos de 32 bits, garantizando así una alta resolución para las operaciones sin perder rendimiento.
+\item WO-OPT: Sin optimizaciones.
 
-Durante la etapa de desarrollo inicial del hardware se determinó que el canal de datos de alta velocidad ofrecido por la interfaz AXI Full es el requerido para una aplicación donde el alto volumen de datos a procesar es un factor determinante para el rendimiento total de la solución. Esto se evidencia al implementar la solución con la interfaz AXI Lite, con la cual se obtuvo un rendimiento más bajo que la solución netamente software.
+\item P-UNROLL: Pipelining a nivel de bucles combinado con Unroll a los bucles.
+
+\item DATAFLOW: Pipelining a nivel de tareas.
+
+\item AO: Optimización de área.
+
+\item PO: Pipelining a nivel de tareas, bucles y unroll
+
+\end{itemize}
+
+ \begin{figure}[!ht]
+	\centering
+		\includegraphics[scale=0.6]{Figures/generalPerformance}
+	\caption{Rendimiento del acelerador en Hardware}
+	\label{fig:generalPerformance}
+\end{figure}
+
+La Figura muestra claramente que la estrategia ``PO'' ofrece el mejor rendimiento en tiempo de ejecución de las tareas, siendo la estrategia a implementar en producción.
+
+\clearpage
+
+\subsection{Recursos utilizados}
+Una vez determinados los tiempos de ejecución, se hace necesario tener en cuenta el área o la cantidad de recursos necesarios para cumplir las diferentes tareas de la solución. En este caso se analizó la cantidad de recursos para cada estrategia teniendo en cuenta el reporte del sintetizador de hardware Vivado.
+
+La Figura \ref{fig:usedResources} muestra el porcentaje de recursos usados por cada una de las diferentes estrategias. Es importante notar que la estrategia ``AO'' usa 51\% menos LUT, 42\% menos DSPs y 37\% menos BRAM que su contraparte ``PO'' para un rendimiento casi marginal en tiempo.
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[scale=0.6]{Figures/usedResources}
+	\caption{Recursos utilizados en la FPGA}
+	\label{fig:usedResources}
+\end{figure}
+
+La Figura \ref{fig:performanceResources} muestra claramente que la estrategia ``AO'' es aproximadamente 46\% más eficiente que su contraparte ``PO''. De esta forma, es posible determinar que, al usar menos área vamos a obtener un mejor delta de eficiencia, pues al usar menos recursos es posible adicionar más módulos de hardware o, en otros casos, usar menos potencia en tiempo de ejecución.
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[scale=0.6]{Figures/performanceResources}
+	\caption{Factor de ganancia recursos contra tiempo}
+	\label{fig:performanceResources}
+\end{figure}

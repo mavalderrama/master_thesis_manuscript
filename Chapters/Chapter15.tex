@@ -1,0 +1,25 @@
+% Chapter 15
+
+\chapter{Conclusiones} % Write in your own chapter title
+\label{Chapter15}
+\lhead{Capítulo 15. \emph{Conclusiones}} % Write in your own chapter title to set the page header
+
+De acuerdo con la revisión del estado del arte no se encontró una solución que articule las dimensiones de aceleración y reconfiguración dinámica del hardware en una plataforma de computación de borde usando un esquema orientado al Internet de las Cosas, por lo cual se considera que el enfoque que se plantea en este trabajo es la principal contribución del mismo.
+
+En particular, se muestra que el procesamiento y fusión de altos volúmenes de datos en el borde de una red IoT es posible usando dispositivos orientados al Internet de las Cosas con hardware para incrementar la potencia de cálculo y software especializado para coordinar y adicionar funcionalidad basado en esquemas de reconfiguración dinámica del hardware. Con un diseño de hardware y las optimizaciones propuestas, es posible realizar múltiples operaciones sobre los datos concurrentemente con un bajo footprint sobre el procesador, relegando únicamente la carga operativa a la FPGA y dejando que el procesador atienda los diferentes servicios de red que implican una conexión con la Nube.
+
+La elección del hardware y los recursos necesarios para la implementación de una plataforma de computación de borde están basados netamente en las necesidades que se desean cumplir. En este caso, hay indicios de que con un hardware (procesador, memoria, almacenamiento) relativamente limitado es posible prototipar y posteriormente desplegar en producción un dispositivo enteramente capaz de realizar el trabajo de otros dispositivos con TDP mucho más altos. 
+
+Se determinó que es posible implementar directamente el modelo Hardware entrenado, garantizando el funcionamiento y detección basado en un modelo software usando las herramientas de desarrollo y entrenamiento de Matlab.
+
+Más aún, una implementación directamente sobre el hardware permite tener control fino sobre las diferentes etapas de optimización, manipulación de los datos y consumo de recursos de hardware a diferencia de implementaciones usando las herramientas de Matlab como System Generator que permiten sintetizar hardware a un nivel muy alto sin opciones de optimización y consumo de recursos para sistemas como el propuesto en el que el hardware es muy limitado.
+
+Como parte de la funcionalidad de la plataforma, se integraron exitosamente los múltiples módulos de hardware como bloques IP en forma de repositorio; estos se encuentran almacenados al interior de la memoria micro SD que contiene el File System y la configuración de arranque del sistema operativo. Esto con el objetivo de que la plataforma de computación de borde tenga a disposición local los módulos que permitan la reconfiguración de la FPGA en tiempo de ejecución.
+
+El diseño de hardware propuesto proporciona una ganancia de 4x la velocidad de cálculo sobre su contraparte software con el mismo diseño base, convirtiéndolo en una solución mucho más eficiente para el procesamiento de los datos en el borde de una red IoT. Además, con las optimizaciones de área correctas es posible integrar múltiples módulos IP que realicen diferentes operaciones y transformaciones sobre los datos, sacrificando rendimiento que puede o no ser notable, dependiendo de la complejidad y optimizaciones de hardware que requiera el circuito.
+
+La implementación de una solución como la propuesta requiere de pasos muy precisos en la configuración del kernel, más aún si se desean características especificas como un sistema de archivos de Ubuntu o módulos de hardware como una DMA para video o para mover grandes bloques de datos de una región a otra de memoria. Con una arquitectura como la propuesta es posible configurar la FPGA en tiempo de ejecución del Kernel de Linux y adicionar nuevos binarios y configuraciones al sistema de archivos usando un servidor sftp y un cliente como FileZilla.
+
+Se estableció que el ancho en bits del bus de datos del circuito hardware no influye sobre la latencia total del circuito, con lo cual se pudo implementar un ancho de datos de 32 bits, garantizando así una alta resolución para las operaciones sin perder rendimiento.
+
+Durante la etapa de desarrollo inicial del hardware se determinó que el canal de datos de alta velocidad ofrecido por la interfaz AXI Full es el requerido para una aplicación donde el alto volumen de datos a procesar es un factor determinante para el rendimiento total de la solución. Esto se evidencia al implementar la solución con la interfaz AXI Lite, con la cual se obtuvo un rendimiento más bajo que la solución netamente software.

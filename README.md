@@ -1,3 +1,2 @@
-## Computación de Borde con FPGA para IoT
-My Master Degree Thesis\s\s
-This Document should be rendered using Texmaker or Overleaf V2\s\s
+# AI Powered Edge Computing Flood Prediction System using Hardware Artificial Neural Networks and Partial Reconfiguration
+LATEX Document
